@@ -1,0 +1,36 @@
+version: '3'
+
+vars:
+  KUBECONFIG_FILE: '{{.KUBECONFIG_FILE_PATH}}/{{.KUBECONFIG_FILE_NAME}}'
+  KUBECONFIG: '--kubeconfig {{.KUBECONFIG_FILE}}'
+  OBSERVABILITY_NS: 'monitoring'
+  CLI: 'sts --url {{.SO_URL}} --api-token {{.SO_TOKEN}}'
+  
+tasks:
+  shell-env:
+    desc: run 'eval $(common:task shell-env)' to setup local kubectx
+    cmds:
+      - echo "export KUBECONFIG={{.KUBECONFIG_FILE}}"      
+      
+  deploy-otel-agent:
+    silent: true
+    cmds: 
+      - echo "Update helm repo"
+      - helm repo add stackstate-addons https://ravan.github.io/helm-charts/
+      - helm repo update
+      - |-
+        cat <<EOF | helm upgrade --install --create-namespace {{.KUBECONFIG}} --namespace {{.OBSERVABILITY_NS}} -f - suse {{.HELM_REPO}}/suse-observability-otel-collector 
+        apiKey: {{.SO_API_KEY}}
+        otlpHost: {{.SO_OTLP}}
+        clusterName: {{.CLUSTER_NAME}}
+        EOF
+  
+  deploy-observability-agent:
+    silent: true
+    cmds:
+      - echo "Update helm repo"
+      - helm repo add suse-observability https://charts.rancher.com/server-charts/prime/suse-observability
+      - helm repo update
+      - echo "Installed agent will sent data to '{{.CLUSTER_NAME}}' pipeline on server '{{.SO_URL}}'"
+      - helm upgrade --install {{.KUBECONFIG}} --namespace {{.OBSERVABILITY_NS}} --create-namespace --set-string 'stackstate.apiKey'="{{.SO_API_KEY}}" --set-string 'stackstate.cluster.name'="{{.CLUSTER_NAME}}" --set-string 'stackstate.url'="{{.SO_URL}}/receiver/stsAgent" --set 'nodeAgent.skipKubeletTLSVerify'=true suse-observability-agent suse-observability/suse-observability-agent 
+      

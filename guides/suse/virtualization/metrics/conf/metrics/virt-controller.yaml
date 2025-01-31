@@ -1,0 +1,214 @@
+nodes:
+  
+  ###### Work Queue Charts for Virtual Controller ######
+  
+  - id: -100
+    name: Add Rate
+    queries:
+      - expression: sum(rate(kubevirt_workqueue_adds_total{k8s_cluster_name="${tags.cluster-name}", k8s_pod_name="${name}"}[${__interval}])) by (name)
+        alias: '${name}'
+    scope:  type in ("pod") and label = "kubevirt.io:virt-controller"
+    identifier: urn:stackpack:kubevirt:shared:metric-binding:work-queue-add-rate
+    unit: short
+    chartType: line
+    priority: high
+    enabled: true
+    layout:
+      metricPerspective:
+        tab: Virtualization
+        section: Work Queue
+      componentSummary:
+        weight: 3
+    _type: MetricBinding
+    
+  - id: -105
+    name: Depth
+    queries:
+      - expression: kubevirt_workqueue_depth{k8s_cluster_name="${tags.cluster-name}", k8s_pod_name="${name}"}
+        alias: '${name}'
+    scope:  type in ("pod") and label = "kubevirt.io:virt-controller"
+    identifier: urn:stackpack:kubevirt:shared:metric-binding:work-queue-depth
+    unit: short
+    chartType: line
+    priority: high
+    enabled: true
+    layout:
+      metricPerspective:
+        tab: Virtualization
+        section: Work Queue
+      componentSummary:
+        weight: 3
+    _type: MetricBinding
+    
+  - id: -110
+    name: Queue Duration
+    queries:
+      - expression: histogram_quantile(0.99, sum(rate(kubevirt_workqueue_queue_duration_seconds_bucket{k8s_cluster_name="${tags.cluster-name}", k8s_pod_name="${name}"}[${__interval}])) by (instance, name, le))
+        alias: '${name}'
+    scope:  type in ("pod") and label = "kubevirt.io:virt-controller"
+    identifier: urn:stackpack:kubevirt:shared:metric-binding:work-queue-duration
+    unit: short
+    chartType: line
+    priority: high
+    enabled: true
+    layout:
+      metricPerspective:
+        tab: Virtualization
+        section: Work Queue
+      componentSummary:
+        weight: 3
+    _type: MetricBinding
+    
+  - id: -115
+    name: Work Duration
+    queries:
+      - expression: histogram_quantile(0.99, sum(rate(kubevirt_workqueue_work_duration_seconds_bucket{k8s_cluster_name="${tags.cluster-name}", k8s_pod_name="${name}"}[${__interval}])) by (instance, name, le))
+        alias: '${name}'
+    scope:  type in ("pod") and label = "kubevirt.io:virt-controller"
+    identifier: urn:stackpack:kubevirt:shared:metric-binding:work-queue-work-duration
+    unit: short
+    chartType: line
+    priority: high
+    enabled: true
+    layout:
+      metricPerspective:
+        tab: Virtualization
+        section: Work Queue
+      componentSummary:
+        weight: 3
+    _type: MetricBinding
+  
+  - id: -120
+    name: Unfinished Work
+    queries:
+      - expression: kubevirt_workqueue_unfinished_work_seconds{k8s_cluster_name="${tags.cluster-name}", k8s_pod_name="${name}"}
+        alias: '${name}'
+    scope:  type in ("pod") and label = "kubevirt.io:virt-controller"
+    identifier: urn:stackpack:kubevirt:shared:metric-binding:work-queue-unfinished-work
+    unit: s
+    chartType: line
+    priority: high
+    enabled: true
+    layout:
+      metricPerspective:
+        tab: Virtualization
+        section: Work Queue
+      componentSummary:
+        weight: 3
+    _type: MetricBinding
+  
+  - id: -125
+    name: Retry Rate
+    queries:
+      - expression: rate(kubevirt_workqueue_retries_total{k8s_cluster_name="${tags.cluster-name}", k8s_pod_name="${name}"}[${__interval}])
+        alias: '${name}'
+    scope:  type in ("pod") and label = "kubevirt.io:virt-controller"
+    identifier: urn:stackpack:kubevirt:shared:metric-binding:work-queue-retry-rate
+    unit: short
+    chartType: line
+    priority: high
+    enabled: true
+    layout:
+      metricPerspective:
+        tab: Virtualization
+        section: Work Queue
+      componentSummary:
+        weight: 3
+    _type: MetricBinding
+    
+  - id: -130
+    name: Longest Running Processor
+    queries:
+      - expression: kubevirt_workqueue_longest_running_processor_seconds{k8s_cluster_name="${tags.cluster-name}", k8s_pod_name="${name}"}
+        alias: '${name}'
+    scope:  type in ("pod") and label = "kubevirt.io:virt-controller"
+    identifier: urn:stackpack:kubevirt:shared:metric-binding:work-queue-longest-running-processor
+    unit: s
+    chartType: line
+    priority: high
+    enabled: true
+    layout:
+      metricPerspective:
+        tab: Virtualization
+        section: Work Queue
+      componentSummary:
+        weight: 3
+    _type: MetricBinding
+    
+  ###### Virtual Machine Charts for Virtual Controller ######
+  
+  - id: -140
+    name: VMI Creation Time
+    queries:
+      - expression: histogram_quantile(0.95, sum(rate(kubevirt_vmi_phase_transition_time_from_creation_seconds_bucket{k8s_cluster_name="${tags.cluster-name}", k8s_pod_name="${name}"}[${__interval}])) by (phase, le))
+        alias: '${phase}'
+    scope:  type in ("pod") and label = "kubevirt.io:virt-controller"
+    identifier: urn:stackpack:kubevirt:shared:metric-binding:vmi-creation-time
+    unit: s
+    chartType: line
+    priority: high
+    enabled: true
+    layout:
+      metricPerspective:
+        tab: Virtualization
+        section: Virtual Machines
+      componentSummary:
+        weight: 3
+    _type: MetricBinding
+  
+  - id: -150
+    name: VMI Start Rate
+    queries:
+      - expression: sum(rate(kubevirt_vmi_phase_transition_time_from_creation_seconds_count{phase="Running", k8s_cluster_name="${tags.cluster-name}", k8s_pod_name="${name}"}[${__interval}])) by (instance)
+        alias: 'Running'
+    scope:  type in ("pod") and label = "kubevirt.io:virt-controller"
+    identifier: urn:stackpack:kubevirt:shared:metric-binding:vmi-start-rate
+    unit: ops
+    chartType: line
+    priority: high
+    enabled: true
+    layout:
+      metricPerspective:
+        tab: Virtualization
+        section: Virtual Machines
+      componentSummary:
+        weight: 3
+    _type: MetricBinding
+  
+  - id: -155
+    name: VMI Phase Transition Latency
+    queries:
+      - expression: histogram_quantile(0.95, sum(rate(kubevirt_vmi_phase_transition_time_seconds_bucket{ k8s_cluster_name="${tags.cluster-name}", k8s_pod_name="${name}"}[${__interval}])) by (le,phase))
+        alias: '${phase}'
+    scope:  type in ("pod") and label = "kubevirt.io:virt-controller"
+    identifier: urn:stackpack:kubevirt:shared:metric-binding:vmi-phase-transition-latency
+    unit: s
+    chartType: line
+    priority: high
+    enabled: true
+    layout:
+      metricPerspective:
+        tab: Virtualization
+        section: Virtual Machines
+      componentSummary:
+        weight: 3
+    _type: MetricBinding
+    
+  - id: -160
+    name: VMI Count (approx.)
+    queries:
+      - expression: sum(increase(kubevirt_vmi_phase_transition_time_from_creation_seconds_count{k8s_cluster_name="${tags.cluster-name}", k8s_pod_name="${name}"}[${__interval}])) by (phase)
+        alias: '${phase}'
+    scope:  type in ("pod") and label = "kubevirt.io:virt-controller"
+    identifier: urn:stackpack:kubevirt:shared:metric-binding:vmi-count-approx
+    unit: short
+    chartType: line
+    priority: high
+    enabled: true
+    layout:
+      metricPerspective:
+        tab: Virtualization
+        section: Virtual Machines
+      componentSummary:
+        weight: 3
+    _type: MetricBinding

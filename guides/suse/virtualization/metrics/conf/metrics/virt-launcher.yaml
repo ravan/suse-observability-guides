@@ -1,0 +1,190 @@
+nodes:
+  - _type: MetricBinding
+    chartType: line
+    enabled: true
+    id: -100
+    identifier: urn:stackpack:kubevirt:shared:metric-binding:vmi-cpu-usage
+    layout:
+      componentSummary:
+        weight: 3
+      metricPerspective:
+        section: Virtual Machine
+        tab: Virtualization
+    name: CPU Usage
+    priority: high
+    queries:
+      - alias: '${name} - ${net_host_name}'
+        expression: '(avg(rate(kubevirt_vmi_vcpu_seconds_total{k8s_cluster_name="${tags.cluster-name}", k8s_node_name="${tags.node-name}", namespace="${tags.namespace}", kubernetes_vmi_label_harvesterhci_io_vmName="${tags.vm.kubevirt.io/name}"}[${__rate_interval}])) by (name, net_host_name))'
+    scope: type in ("pod") and label = "kubevirt.io:virt-launcher"
+    unit: percent
+
+  - _type: MetricBinding
+    chartType: line
+    enabled: true
+    id: -101
+    identifier: urn:stackpack:kubevirt:shared:metric-binding:vmi-memory-usage
+    layout:
+      componentSummary:
+        weight: 3
+      metricPerspective:
+        section: Virtual Machine
+        tab: Virtualization
+    name: Memory Usage
+    priority: high
+    queries:
+      - alias: '${name} - ${net_host_name}'
+        expression: '((kubevirt_vmi_memory_available_bytes{k8s_cluster_name="${tags.cluster-name}", k8s_node_name="${tags.node-name}", namespace="${tags.namespace}", kubernetes_vmi_label_harvesterhci_io_vmName="${tags.vm.kubevirt.io/name}"} - kubevirt_vmi_memory_unused_bytes{k8s_cluster_name="${tags.cluster-name}", k8s_node_name="${tags.node-name}", namespace="${tags.namespace}", kubernetes_vmi_label_harvesterhci_io_vmName="${tags.vm.kubevirt.io/name}"}) / kubevirt_vmi_memory_available_bytes{k8s_cluster_name="${tags.cluster-name}", k8s_node_name="${tags.node-name}", namespace="${tags.namespace}", kubernetes_vmi_label_harvesterhci_io_vmName="${tags.vm.kubevirt.io/name}"})'
+    scope: type in ("pod") and label = "kubevirt.io:virt-launcher"
+    unit: percentunit
+
+  - _type: MetricBinding
+    chartType: line
+    enabled: true
+    id: -102
+    identifier: urn:stackpack:kubevirt:shared:metric-binding:vmi-storage-read-traffic-bytes
+    layout:
+      componentSummary:
+        weight: 3
+      metricPerspective:
+        section: Virtual Machine Storage
+        tab: Virtualization
+    name: Storage Read Traffic Bytes
+    priority: high
+    queries:
+      - alias: '${name}: ${drive}'
+        expression: '(irate(kubevirt_vmi_storage_read_traffic_bytes_total{k8s_cluster_name="${tags.cluster-name}", k8s_node_name="${tags.node-name}", namespace="${tags.namespace}", kubernetes_vmi_label_harvesterhci_io_vmName="${tags.vm.kubevirt.io/name}"}[${__rate_interval}]))'
+    scope: type in ("pod") and label = "kubevirt.io:virt-launcher"
+    unit: Bps
+
+  - _type: MetricBinding
+    chartType: line
+    enabled: true
+    id: -103
+    identifier: urn:stackpack:kubevirt:shared:metric-binding:vmi-storage-write-traffic-bytes
+    layout:
+      componentSummary:
+        weight: 3
+      metricPerspective:
+        section: Virtual Machine Storage
+        tab: Virtualization
+    name: Storage Write Traffic Bytes
+    priority: high
+    queries:
+      - alias: '${name}: ${drive}'
+        expression: '(irate(kubevirt_vmi_storage_write_traffic_bytes_total{k8s_cluster_name="${tags.cluster-name}", k8s_node_name="${tags.node-name}", namespace="${tags.namespace}", kubernetes_vmi_label_harvesterhci_io_vmName="${tags.vm.kubevirt.io/name}"}[${__rate_interval}]))'
+    scope: type in ("pod") and label = "kubevirt.io:virt-launcher"
+    unit: Bps
+
+  - _type: MetricBinding
+    chartType: line
+    enabled: true
+    id: -104
+    identifier: urn:stackpack:kubevirt:shared:metric-binding:vmi-network-receive-bits
+    layout:
+      componentSummary:
+        weight: 3
+      metricPerspective:
+        section: Virtual Machine Network
+        tab: Virtualization
+    name: Network Receive Bits
+    priority: high
+    queries:
+      - alias: '${name} - ${interface}'
+        expression: '(irate(kubevirt_vmi_network_receive_bytes_total{k8s_cluster_name="${tags.cluster-name}", k8s_node_name="${tags.node-name}", namespace="${tags.namespace}", kubernetes_vmi_label_harvesterhci_io_vmName="${tags.vm.kubevirt.io/name}"}[${__rate_interval}])*8)'
+    scope: type in ("pod") and label = "kubevirt.io:virt-launcher"
+    unit: bps
+
+  - _type: MetricBinding
+    chartType: line
+    enabled: true
+    id: -105
+    identifier: urn:stackpack:kubevirt:shared:metric-binding:vmi-network-transmit-bits
+    layout:
+      componentSummary:
+        weight: 3
+      metricPerspective:
+        section: Virtual Machine Network
+        tab: Virtualization
+    name: Network Transmit Bits
+    priority: high
+    queries:
+      - alias: '${name} - ${interface}'
+        expression: '(irate(kubevirt_vmi_network_transmit_bytes_total{k8s_cluster_name="${tags.cluster-name}", k8s_node_name="${tags.node-name}", namespace="${tags.namespace}", kubernetes_vmi_label_harvesterhci_io_vmName="${tags.vm.kubevirt.io/name}"}[${__rate_interval}])*8)'
+    scope: type in ("pod") and label = "kubevirt.io:virt-launcher"
+    unit: bps
+
+  - _type: MetricBinding
+    chartType: line
+    enabled: true
+    id: -106
+    identifier: urn:stackpack:kubevirt:shared:metric-binding:vmi-network-receive-packets-2h
+    layout:
+      componentSummary:
+        weight: 3
+      metricPerspective:
+        section: Virtual Machine Network
+        tab: Virtualization
+    name: Network Receive Packets (2h)
+    priority: high
+    queries:
+      - alias: '${name} - ${interface}'
+        expression: 'topk(5, (delta(kubevirt_vmi_network_receive_packets_total{k8s_cluster_name="${tags.cluster-name}", k8s_node_name="${tags.node-name}", namespace="${tags.namespace}", kubernetes_vmi_label_harvesterhci_io_vmName="${tags.vm.kubevirt.io/name}"}[2h])))'
+    scope: type in ("pod") and label = "kubevirt.io:virt-launcher"
+    unit: short
+
+  - _type: MetricBinding
+    chartType: line
+    enabled: true
+    id: -107
+    identifier: urn:stackpack:kubevirt:shared:metric-binding:vmi-network-transmit-packets-2h
+    layout:
+      componentSummary:
+        weight: 3
+      metricPerspective:
+        section: Virtual Machine Network
+        tab: Virtualization
+    name: Network Transmit Packets (2h)
+    priority: high
+    queries:
+      - alias: '${name} - ${interface}'
+        expression: 'topk(5, (delta(kubevirt_vmi_network_transmit_packets_total{k8s_cluster_name="${tags.cluster-name}", k8s_node_name="${tags.node-name}", namespace="${tags.namespace}", kubernetes_vmi_label_harvesterhci_io_vmName="${tags.vm.kubevirt.io/name}"}[2h])))'
+    scope: type in ("pod") and label = "kubevirt.io:virt-launcher"
+    unit: short
+
+  - _type: MetricBinding
+    chartType: line
+    enabled: true
+    id: -109
+    identifier: urn:stackpack:kubevirt:shared:metric-binding:vmi-io-time
+    layout:
+      componentSummary:
+        weight: 3
+      metricPerspective:
+        section: Virtual Machine Storage
+        tab: Virtualization
+    name: IO Time
+    priority: high
+    queries:
+      - alias: '${drive}-write'
+        expression: 'irate(kubevirt_vmi_storage_write_times_seconds_total{k8s_cluster_name="${tags.cluster-name}", k8s_node_name="${tags.node-name}", namespace="${tags.namespace}", kubernetes_vmi_label_harvesterhci_io_vmName="${tags.vm.kubevirt.io/name}"}[${__rate_interval}])'
+    scope: type in ("pod") and label = "kubevirt.io:virt-launcher"
+    unit: ms
+
+  - _type: MetricBinding
+    chartType: line
+    enabled: true
+    id: -110
+    identifier: urn:stackpack:kubevirt:shared:metric-binding:vmi-iops
+    layout:
+      componentSummary:
+        weight: 3
+      metricPerspective:
+        section: Virtual Machine Storage
+        tab: Virtualization
+    name: IOPS
+    priority: high
+    queries:
+      - alias: '${drive}-write'
+        expression: 'irate(kubevirt_vmi_storage_iops_write_total{k8s_cluster_name="${tags.cluster-name}", k8s_node_name="${tags.node-name}", namespace="${tags.namespace}", kubernetes_vmi_label_harvesterhci_io_vmName="${tags.vm.kubevirt.io/name}"}[${__rate_interval}])'
+    scope: type in ("pod") and label = "kubevirt.io:virt-launcher"
+    unit: iops

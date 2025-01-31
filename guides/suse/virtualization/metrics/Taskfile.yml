@@ -1,0 +1,68 @@
+version: '3'
+
+dotenv: ['../../../../.env', '../../../../.env_color']
+
+includes:
+  common:
+    taskfile: ../../../../common
+    
+tasks:
+  upload-metric-bindings:
+    silent: false
+    cmds:
+      - echo "Uploading metric bindings"
+      # - "{{.CLI}} settings apply -f ./conf/metrics/virt-controller.yaml"
+      - "{{.CLI}} settings apply -f ./conf/metrics/virt-launcher.yaml"
+  
+  install-stackpack-instance:
+    silent: true
+    cmds:
+    - echo "Creating kubernetes stackpack instance for '{{.CLUSTER_NAME}}'"
+    - "{{.CLI}} stackpack install -n kubernetes-v2 -p kubernetes_cluster_name={{.CLUSTER_NAME}}"
+    
+  uninstall-stackpack-instance:
+    silent: true
+    cmds:
+    - |
+      id=$({{.CLI}} stackpack list-instances -n kubernetes-v2 --output json | jq -r '.instances[] | select(.config.kubernetes_cluster_name == "{{.CLUSTER_NAME}}") | .id' | xargs)
+      if [ -n "${id}" ]; then
+        echo "Removing instance {{.CLUSTER_NAME}} ($id)"
+        {{.CLI}} stackpack uninstall -n kubernetes-v2 --id $id
+      else
+        echo "No instance of stackpack found for {{.CLUSTER_NAME}}. Ignoring."
+      fi
+      
+  deploy-kubevirt-otel-collector:
+      silent: true
+      cmds: 
+        - |-
+          kubectl apply {{.KUBECONFIG}} -n harvester-system -f ../../../../common/config/suse-otel-rbac.yaml
+          cat <<EOF | helm upgrade --install --create-namespace {{.KUBECONFIG}} --namespace monitoring -f - suse {{.HELM_REPO}}/suse-observability-otel-collector 
+          apiKey: {{.SO_API_KEY}}
+          otlpHost: {{.SO_OTLP}}
+          clusterName: {{.CLUSTER_NAME}}
+          opentelemetry-collector:
+            config:
+              receivers:
+                prometheus:
+                  config:
+                    scrape_configs:
+                    - job_name: 'kubevirt-metrics'
+                      tls_config:
+                        insecure_skip_verify: true
+                      scrape_interval: 30s
+                      scheme: https
+                      kubernetes_sd_configs:
+                        - role: endpoints
+                          namespaces:
+                            names:
+                              - harvester-system
+                          selectors:
+                            - role: endpoints
+                              field: "metadata.name=kubevirt-prometheus-metrics"
+                            
+          EOF
+  
+        
+
+ 
