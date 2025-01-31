@@ -11,7 +11,7 @@ In this guide, we’ll walk you through setting up monitoring from scratch, crea
 Before we get started, make sure you have:
 - A running SUSE Observability instance
 - A SUSE Virtualization cluster up and running
-- Your `.env` file properly configured (refer to the main [README](../../../README.md) for setup details)
+- Your `.env` file properly configured (refer to the main [README](../../../../README.md) for setup details)
 
 ### Quick Connectivity Check
 To ensure you can connect to your cluster, run the following:
@@ -51,8 +51,8 @@ SUSE Observability allows you to create **custom views** to focus on key compone
 We’ll use [STQL](https://docs.stackstate.com/reference/k8sts-stql_reference) queries to define the view filters.
 
 ### Define These Custom Views:
-- **VirtControllers:** (label IN ("kubevirt.io:virt-control") AND type = "pod")
-- **VirtualMachines:** (label IN ("kubevirt.io:virt-launcher") AND type = "pod")
+- **VirtControllers:** `(label IN ("kubevirt.io:virt-control") AND type = "pod")`
+- **VirtualMachines:** `(label IN ("kubevirt.io:virt-launcher") AND type = "pod")`
 
 💡 **Pro Tip:** Star a view to pin it to the left menu for quick access.
 
