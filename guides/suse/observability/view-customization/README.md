@@ -429,7 +429,7 @@ Below in the sections that follow we explore the YAML structure behind the highl
       _type: ComponentTypeAbout
     events:
       showEvents: true
-      relatedResourcesTemplate: (withNeighborsOf(direction = "both", components = ({COMPONENT_PREDICATE}), levels = "2") AND type IN ("deployment", "statefulset", "daemonset", "secret", "configmap")) OR ({COMPONENT_PREDICATE})
+      relatedResourcesTemplate: (withNeighborsOf(direction = "both", components = ({COMPONENT_ID}), levels = "2") AND type IN ("deployment", "statefulset", "daemonset", "secret", "configmap")) OR ({COMPONENT_ID})
       _type: ComponentTypeEvents
     showLogs: true
     showLastChange: true
@@ -456,6 +456,8 @@ Below in the sections that follow we explore the YAML structure behind the highl
         _type: ComponentTypeMetricCategory
     _type: ComponentTypeHighlights
 ```
+Note that `COMPONENT_ID` can be used as a placeholder in STQL queries.
+
 
 ![Highlight Breakdown](./assets/highlight_breakdown.png)
 
@@ -618,6 +620,7 @@ The `display` field defines how the data is rendered. The following display type
   _type: ComponentTypeField
 ```
 </details>
+
 ---
 
 ## Learn by Example
