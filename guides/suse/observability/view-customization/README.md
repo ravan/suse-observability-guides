@@ -31,6 +31,8 @@ Here’s what each key means:
 - **id**: A unique negative number that identifies the node within the configuration.
 - **identifier**: A unique URN that identifies the node in SUSE Observability. For more details, see [Topology Identifiers](https://docs.stackstate.com/reference/identifiers#topology-identifiers).
 
+Keep this information in the back of your mind while working with configuration YAML.
+
 ---
 
 ## Menu Customization
@@ -194,7 +196,9 @@ Columns are set up in the `overview.columns` list. For example:
   # ... other configuration ...
 ```
 
-Below are some examples of individual column types:
+<details>
+  <summary>**examples of individual column types**</summary>
+
 
 #### 1.1 Health Indicator Column
 
@@ -325,6 +329,7 @@ Shows the ratio between two values.
     - completions
   _type: ViewTypeTableColRatio
 ```
+</details>
 
 #### 2. Adding Filters
 
@@ -381,7 +386,7 @@ Highlight pages in SUSE Observability are designed to break down complex data in
 ![Highlights Model](./assets/highlight_model.png)
 
 
-### Understanding Key Components  
+### Understanding Key Concepts
 
 At the core of everything are **Fields**. These pull essential values from a component, structure them with display options, and present them as clear, readable information in the **About** section.  
 
@@ -549,7 +554,8 @@ The `display` field defines how the data is rendered. The following display type
 | `PromqlDisplay`                  | Renders Prometheus query results.             | Custom metric displays     |
 
 
-#### **Example Field Configurations**
+<details>
+  <summary>**Example Field Configurations**</summary>
 
 ##### Example 1: Health Field
 ```yaml
@@ -607,7 +613,7 @@ The `display` field defines how the data is rendered. The following display type
     singular: label
   _type: ComponentTypeField
 ```
-
+</details>
 ---
 
 ## Learn by Example
@@ -659,7 +665,7 @@ To pull only highlight details for **ComponentType**, use this command:
 ```bash
 curl --location --request GET "$URL/api/node/ComponentType?fullNode=true&timeoutSeconds=15" \
      --header "X-API-Token: $API_TOKEN" \
-     | jq 'map(select(.highlights != null) | {name, highlights})' | yq -Pyq -P
+     | jq 'map(select(.highlights != null) | {name, highlights})' | yq -P
 ```
 
 
