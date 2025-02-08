@@ -195,9 +195,11 @@ Columns are set up in the `overview.columns` list. For example:
   identifier: urn:stackpack:k8s-common-v2:shared:view-type:persistent-volume-claim
   # ... other configuration ...
 ```
+#### Column Type Definitions
 
 <details>
-  <summary>**examples of individual column types**</summary>
+  <summary>Click to expand</summary>
+
 
 
 #### 1.1 Health Indicator Column
@@ -554,8 +556,10 @@ The `display` field defines how the data is rendered. The following display type
 | `PromqlDisplay`                  | Renders Prometheus query results.             | Custom metric displays     |
 
 
+#### Examples
+
 <details>
-  <summary>**Example Field Configurations**</summary>
+  <summary>Click to expand</summary>
 
 ##### Example 1: Health Field
 ```yaml
