@@ -1,8 +1,8 @@
 # Monitoring Your SUSE Virtualization Environment
 
 In today’s dynamic IT landscapes, gaining deep visibility into your virtualization infrastructure is key to ensuring optimal performance and
-rapid troubleshooting. In this guide, we’ll walk you through how to set up comprehensive monitoring for your SUSE Virtualization environment—from
-installing the SUSE Observability Agent to creating custom dashboards and scraping specialized KubeVirt metrics.
+rapid troubleshooting. In this guide, we’ll walk you through how to set up comprehensive monitoring for your SUSE Virtualization environment. 
+From installing the SUSE Observability Agent to creating custom dashboards and scraping specialized KubeVirt metrics.
 
 ---
 

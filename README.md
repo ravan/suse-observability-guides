@@ -4,6 +4,7 @@ This repository provides a collection of configuration examples for SUSE Observa
 
 ## Available Guides  
 
+- [SUSE Observability User Interface Extension](./guides/suse/observability/view-customization/README.md) 
 - [SUSE Virtualization Observability](./guides/suse/virtualization/metrics/README.md)  
 
 ## Prerequisites  
