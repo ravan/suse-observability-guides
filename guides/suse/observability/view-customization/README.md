@@ -62,16 +62,11 @@ A Main Menu Group acts as a container for related menu items. Here’s an exampl
       viewIdentifier: urn:stackpack:kubernetes-v2:shared:query-view:services
 ```
 
-**Key parameters:**
-
-- **_type**: Indicates the type (e.g., `MainMenuGroup`).
-- **defaultOpen**: A boolean that decides if the group is expanded by default.
-- **id**: A unique negative number for the group.
-- **identifier**: The URN that uniquely represents this menu group.
-- **name**: The name displayed in the menu.
-- **items**: A list of menu items within the group.
-  - **_type**: The type of the item (e.g., `MainMenuViewItem`).
-  - **viewIdentifier**: Links the item to a specific QueryView.
+The key parameters of a Main Menu Group define its structure and behavior. The `_type` field specifies the type, such as `MainMenuGroup`, 
+to indicate that it acts as a container for related items. The `defaultOpen` parameter is a boolean that determines whether the group is expanded
+by default. Each group has a unique `id`, which is always a negative number. SUSE Obervability will convert to a proper id when loaded in the system.
+The `identifier` is a URN that uniquely represents the menu group. The `name` field defines the display name shown in the menu. Within the group, the `items` list contains individual menu items, each with its 
+own `_type`, such as `MainMenuViewItem`, and a `viewIdentifier`, which links the item to a specific QueryView.
 
 #### 2. Query View
 
@@ -102,16 +97,13 @@ Example:
     - HideFromViewsOverview
 ```
 
-**Key parameters:**
-
-- **_type**: The type of item (here, `QueryView`).
-- **id** and **identifier**: Unique values for the view.
-- **name** and **description**: Text that describes the view.
-- **query**: An [STQL](https://docs.stackstate.com/reference/k8sts-stql_reference) query that determines what data appears.
-- **grouping options**: Flags like `groupedByDomains`, `groupingEnabled`, etc., help organize the data.
-- **viewType**: Specifies the type of view for rendering.
-- **flags**: Additional behavior modifiers (e.g., to disable event handlers or hide the view from overviews).
-
+The key parameters of a Query View define how it is structured and what data it presents. The `_type` parameter specifies the item type, 
+which in this case is `QueryView`. Both `id` and `identifier` provide unique values that distinguish the view. The `name` and `description` 
+fields offer a clear and concise explanation of the view’s purpose. The `query` parameter uses an 
+[STQL](https://docs.stackstate.com/reference/k8sts-stql_reference) statement to filter and determine which data appears in the view.
+Several grouping options, such as `groupedByDomains`, `groupingEnabled`, and `minimumGroupSize`, help organize the displayed information effectively.
+The `viewType` defines how the data is visually rendered, ensuring the right representation for the given query. Lastly, the `flags` parameter 
+allows additional customizations, such as disabling event handlers or hiding the view from overviews, giving users greater control over its behavior.
 
 
 ---
